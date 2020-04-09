@@ -30,7 +30,7 @@ type MyGame struct {
 }
 
 func getChatRequest(w http.ResponseWriter, r *http.Request) {
-	file, _ := ioutil.ReadFile("data.pgn")
+	file, _ := ioutil.ReadFile("data.pgn") //this is probably pretty bad since we load all of the file all at once.
 	filetxt := string(file)
 	// w.Write(file)
 	w.Header().Set("Content-Type", "application/json")
