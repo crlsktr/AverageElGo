@@ -38,8 +38,10 @@ func getChatRequest(w http.ResponseWriter, r *http.Request) {
 	database.Parse(filetxt)
 
 	var myratings []*MyGame
-	for _, game := range database.Games {
+	totalrating := 0
+	var averagerating float64
 
+	for _, game := range database.Games {
 		var side string
 		if game.Tags["BlackElo"] == "crlsktr" {
 			side = "BlackElo"
@@ -48,11 +50,15 @@ func getChatRequest(w http.ResponseWriter, r *http.Request) {
 		}
 
 		rating, _ := strconv.Atoi(game.Tags[side])
+
 		myratings = append(myratings, &MyGame{
 			Rating: rating,
 			Date:   game.Tags["UTCDate"],
 		})
+
+		totalrating += rating
+		averagerating = float64(totalrating) / float64(len(myratings))
 	}
-	jsongames, _ := json.Marshal(myratings)
+	jsongames, _ := json.Marshal(averagerating)
 	w.Write(jsongames)
 }
